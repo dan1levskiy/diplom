@@ -1,0 +1,6 @@
+{
+  "name": "Telegram Task Dashboard",
+  "description": "A high-performance dashboard for managing tasks and tracking progress synced with your Telegram bot, featuring AI-powered productivity insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
