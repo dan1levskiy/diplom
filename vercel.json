@@ -1,8 +1,14 @@
-
 {
   "version": 2,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://taskmanager-n1mb3l.amvera.io/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ],
   "cleanUrls": true
 }
