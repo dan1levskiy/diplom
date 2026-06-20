@@ -1,19 +1,27 @@
 
 import { Task, UserStats, TelegramUser, TeamOverview, AdminCompaniesOverview } from './types';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  'https://amvera-n1mb3l-run-taskmanager.amvera.io';
+// Прямо на Amvera (CORS включён). Vercel-прокси не нужен.
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || 'https://taskmanager-n1mb3l.amvera.io'
+).replace(/\/$/, '');
+
+async function parseApiError(response: Response): Promise<string> {
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    const body = await response.json().catch(() => ({}));
+    if (typeof body.detail === 'string') return body.detail;
+  }
+  if (response.status === 404) {
+    return 'Сервер API не отвечает. Пересоберите проект на Amvera (файлы api.py + app.py).';
+  }
+  return `Ошибка API (${response.status})`;
+}
 
 async function apiGet<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`);
   if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
-    const message =
-      typeof body.detail === 'string'
-        ? body.detail
-        : `Ошибка API (${response.status})`;
-    throw new Error(message);
+    throw new Error(await parseApiError(response));
   }
   return response.json();
 }
@@ -21,12 +29,7 @@ async function apiGet<T>(path: string): Promise<T> {
 async function apiPost<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, { method: 'POST' });
   if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
-    const message =
-      typeof body.detail === 'string'
-        ? body.detail
-        : `Ошибка API (${response.status})`;
-    throw new Error(message);
+    throw new Error(await parseApiError(response));
   }
   return response.json();
 }
