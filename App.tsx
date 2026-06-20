@@ -253,8 +253,11 @@ const App: React.FC = () => {
 
       <main className="flex-1 p-6 lg:p-10 overflow-x-hidden">
         {loading ? (
-          <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
             <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-slate-500 text-sm text-center max-w-md">
+              Загружаем данные с сервера… Первый вход может занять до минуты — Amvera «просыпается». Потом будет быстро.
+            </p>
           </div>
         ) : (
           <>
