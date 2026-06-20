@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TelegramUser } from '../types';
-import { loginByTelegramId } from '../apiService';
+import { checkApiHealth, loginByTelegramId } from '../apiService';
 
 interface LoginProps {
   onLogin: (user: TelegramUser) => void;
@@ -13,6 +13,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const botUsername = 'tasksmgu_bot';
+
+  useEffect(() => {
+    checkApiHealth().catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
