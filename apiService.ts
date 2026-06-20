@@ -1,19 +1,18 @@
 
 import { Task, UserStats, TelegramUser, TeamOverview, AdminCompaniesOverview } from './types';
 
-// Прямо на Amvera (CORS включён). Vercel-прокси не нужен.
-const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || 'https://taskmanager-n1mb3l.amvera.io'
-).replace(/\/$/, '');
+// Всегда этот домен. На Vercel удали переменную VITE_API_BASE_URL, если она есть.
+const API_BASE_URL = 'https://taskmanager-n1mb3l.amvera.io';
 
 async function parseApiError(response: Response): Promise<string> {
-  const contentType = response.headers.get('content-type') || '';
-  if (contentType.includes('application/json')) {
-    const body = await response.json().catch(() => ({}));
+  try {
+    const body = await response.json();
     if (typeof body.detail === 'string') return body.detail;
+  } catch {
+    // не JSON
   }
   if (response.status === 404) {
-    return 'Сервер API не отвечает. Пересоберите проект на Amvera (файлы api.py + app.py).';
+    return 'Пользователь не найден. Сначала зарегистрируйтесь в боте.';
   }
   return `Ошибка API (${response.status})`;
 }
